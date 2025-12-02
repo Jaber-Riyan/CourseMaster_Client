@@ -70,54 +70,66 @@ export const mockCourses = [
     },
 ]
 
-export const mockLessons = [
+export const syllabus = [
     {
-        id: "1",
-        courseId: "1",
-        title: "Introduction to Web Development",
-        videoUrl: "https://www.youtube.com/embed/YaN3Y597Ui4",
-        duration: "15:30",
-        completed: true,
+        moduleNumber: 1,
+        title: "Introduction",
+        content: [
+            {
+                title: "Introduction to Web Development",
+                videoUrl: "https://www.youtube.com/embed/YaN3Y597Ui4",
+            },
+            {
+                title: "HTML Basics",
+                videoUrl: "https://www.youtube.com/embed/qWjKN-5RiQw",
+            },
+            {
+                title: "CSS Fundamentals",
+                videoUrl: "https://www.youtube.com/embed/VmJasnbX4xE",
+            },
+            {
+                title: "JavaScript Essentials",
+                videoUrl: "https://www.youtube.com/embed/IKz44MDN9pw",
+            },
+            {
+                title: "React Introduction",
+                videoUrl: "https://www.youtube.com/embed/A0mLGgA3x2Q",
+            },
+            {
+                title: "Building Your First Project",
+                videoUrl: "https://www.youtube.com/embed/6lhK3Fs1FEQ",
+            },
+        ]
     },
     {
-        id: "2",
-        courseId: "1",
-        title: "HTML Basics",
-        videoUrl: "https://www.youtube.com/embed/qWjKN-5RiQw",
-        duration: "22:45",
-        completed: true,
-    },
-    {
-        id: "3",
-        courseId: "1",
-        title: "CSS Fundamentals",
-        videoUrl: "https://www.youtube.com/embed/VmJasnbX4xE",
-        duration: "18:20",
-        completed: true,
-    },
-    {
-        id: "4",
-        courseId: "1",
-        title: "JavaScript Essentials",
-        videoUrl: "https://www.youtube.com/embed/IKz44MDN9pw",
-        duration: "25:10",
-        completed: false,
-    },
-    {
-        id: "5",
-        courseId: "1",
-        title: "React Introduction",
-        videoUrl: "https://www.youtube.com/embed/A0mLGgA3x2Q",
-        duration: "30:00",
-        completed: false,
-    },
-    {
-        id: "6",
-        courseId: "1",
-        title: "Building Your First Project",
-        videoUrl: "https://www.youtube.com/embed/6lhK3Fs1FEQ",
-        duration: "45:30",
-        completed: false,
+        moduleNumber: 2,
+        title: "Setup",
+        content: [
+            {
+                title: "Introduction to Web Development",
+                videoUrl: "https://www.youtube.com/embed/YaN3Y597Ui4",
+            },
+            {
+                title: "HTML Basics",
+                videoUrl: "https://www.youtube.com/embed/qWjKN-5RiQw",
+            },
+            {
+                title: "CSS Fundamentals",
+                videoUrl: "https://www.youtube.com/embed/VmJasnbX4xE",
+            },
+            {
+                title: "JavaScript Essentials",
+                videoUrl: "https://www.youtube.com/embed/IKz44MDN9pw",
+            },
+            {
+                title: "React Introduction",
+                videoUrl: "https://www.youtube.com/embed/A0mLGgA3x2Q",
+            },
+            {
+                title: "Building Your First Project",
+                videoUrl: "https://www.youtube.com/embed/6lhK3Fs1FEQ",
+            },
+        ]
     },
 ]
 
