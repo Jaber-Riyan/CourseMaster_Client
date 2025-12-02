@@ -9,6 +9,9 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { studentSidebarItems } from "./studentSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
 import CoursePlayerPage from "@/pages/CoursePlayerPage";
+import CoursesPage from "@/pages/CoursesPage";
+import LoginPage from "@/pages/Auth/Login";
+import RegisterPage from "@/pages/Auth/Register";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +26,18 @@ export const router = createBrowserRouter([
         element: "This is the contact us page",
         path: "contact",
       },
+      {
+        Component: CoursesPage,
+        path: "courses",
+      },
+      {
+        Component: LoginPage,
+        path: "/auth/login",
+      },
+      {
+        Component: RegisterPage,
+        path: "/auth/register",
+      },
     ],
   },
   {
@@ -30,7 +45,7 @@ export const router = createBrowserRouter([
     path: "/student",
     children: [
       { index: true, element: <Navigate to={"/student/dashboard"} /> },
-      { element: <CoursePlayerPage/>, path: "/student/course/:id/player" },
+      { element: <CoursePlayerPage />, path: "/student/course/:id/player" },
       ...generateRoutes(studentSidebarItems),
     ],
   },

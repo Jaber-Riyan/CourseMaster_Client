@@ -48,7 +48,7 @@ export function Navbar() {
             <Link to="/auth/login">Login</Link>
           </Button>
           <Button asChild>
-            <Link to="/auth/signup">Sign Up</Link>
+            <Link to="/auth/register">Register</Link>
           </Button>
         </nav>
       </div>
