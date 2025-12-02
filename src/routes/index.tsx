@@ -8,6 +8,7 @@ import { withAuth } from "@/utils/withAuth";
 import { createBrowserRouter, Navigate } from "react-router";
 import { studentSidebarItems } from "./studentSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
+import CoursePlayerPage from "@/pages/CoursePlayerPage";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
     path: "/student",
     children: [
       { index: true, element: <Navigate to={"/student/dashboard"} /> },
+      { element: <CoursePlayerPage/>, path: "/student/course/:id/player" },
       ...generateRoutes(studentSidebarItems),
     ],
   },

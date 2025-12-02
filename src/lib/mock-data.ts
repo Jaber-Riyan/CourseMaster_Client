@@ -93,7 +93,7 @@ export const mockLessons = [
         title: "CSS Fundamentals",
         videoUrl: "https://www.youtube.com/embed/VmJasnbX4xE",
         duration: "18:20",
-        completed: false,
+        completed: true,
     },
     {
         id: "4",
