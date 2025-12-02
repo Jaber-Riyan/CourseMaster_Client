@@ -63,7 +63,7 @@ export default function CoursePlayerPage() {
                 key={i}
                 value={`module-${i}`}
                 className="border rounded-md">
-                <AccordionTrigger className="px-4 py-2 font-semibold">
+                <AccordionTrigger className="px-4 py-2 font-semibold cursor-pointer">
                   Module {module.moduleNumber} - {module.title}
                 </AccordionTrigger>
 

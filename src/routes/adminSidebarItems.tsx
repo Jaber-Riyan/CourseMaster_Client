@@ -1,4 +1,3 @@
-import TestimonialSection from "@/components/modules/HomePage/TestimonialSection";
 import type { ISidebarItem } from "@/types";
 import {
   LayoutDashboard,
@@ -6,8 +5,17 @@ import {
   Layers,
   Users,
   FileCheck,
-  Settings
+  Settings,
+  
 } from "lucide-react";
+import { lazy } from "react";
+
+const PageSettings = lazy(()=>import("@/pages/Admin/AdminSettings"))
+const Enrollments = lazy(()=>import("@/pages/Admin/AdminEnrollments"))
+const Dashboard = lazy(()=>import("@/pages/Admin/AdminDashboard"))
+const ManageCourses = lazy(()=>import("@/pages/Admin/AdminManageCourses"))
+const ManageBatches = lazy(()=>import("@/pages/Admin/AdminManageBatches"))
+const AssignmentsReviews = lazy(()=>import("@/pages/Admin/AdminAssignments"))
 
 export const adminSidebarItems: ISidebarItem = {
   items: [
@@ -15,37 +23,37 @@ export const adminSidebarItems: ISidebarItem = {
       label: "Dashboard",
       icon: LayoutDashboard,
       href: "/admin/dashboard",
-      component: TestimonialSection
+      component: Dashboard
     },
     {
       label: "Manage Courses",
       icon: BookOpen,
       href: "/admin/courses",
-      component: TestimonialSection
+      component: ManageCourses
     },
     {
       label: "Manage Batches",
       icon: Layers,
       href: "/admin/batches",
-      component: TestimonialSection
+      component: ManageBatches
     },
     {
       label: "Enrollments",
       icon: Users,
       href: "/admin/enrollments",
-      component: TestimonialSection
+      component: Enrollments
     },
     {
       label: "Assignment Review",
       icon: FileCheck,
       href: "/admin/assignments",
-      component: TestimonialSection
+      component: AssignmentsReviews
     },
     {
       label: "Settings",
       icon: Settings,
       href: "/admin/settings",
-      component: TestimonialSection
+      component: PageSettings
     }
   ]
 };
