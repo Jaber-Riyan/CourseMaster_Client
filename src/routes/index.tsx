@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
     path: "/student",
     children: [
       { index: true, element: <Navigate to={"/student/dashboard"} /> },
-      { element: <CoursePlayerPage />, path: "/student/course/:id/player" },
+      { element: <CoursePlayerPage />, path: "/student/course/:id/:enrollmentId/player" },
       ...generateRoutes(studentSidebarItems),
     ],
   },

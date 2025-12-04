@@ -1,17 +1,34 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { mockEnrolledCourses } from "@/lib/mock-data"
-import { BookOpen, Clock, Trophy, TrendingUp } from "lucide-react"
-import { Link } from "react-router"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, Clock, Trophy, TrendingUp } from "lucide-react";
+import { Link } from "react-router";
+import { useUserInfoQuery } from "@/redux/features/Auth/auth.api";
+import { useEnrollmentUserQuery } from "@/redux/features/Enrollment/enrollment.api";
+import Loading from "@/components/Loading";
 
 export default function StudentDashboardPage() {
+  const { data, isLoading: userIsLoading } = useUserInfoQuery(undefined);
+  const { data: enrollmentData, isLoading: enrollmentDataIsLoading } =
+    useEnrollmentUserQuery(undefined);
+  console.log(enrollmentData);
+
+  if (userIsLoading || enrollmentDataIsLoading) return <Loading />;
+
   return (
     <div className="p-8 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Welcome Back, Student!</h1>
+        <h1 className="text-3xl font-bold">
+          Welcome Back, {data?.data?.name.split(" ")[0]}!
+        </h1>
         <p className="text-muted-foreground">Continue your learning journey</p>
       </div>
 
@@ -21,7 +38,9 @@ export default function StudentDashboardPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Enrolled Courses</p>
+                <p className="text-sm text-muted-foreground">
+                  Enrolled Courses
+                </p>
                 <p className="text-2xl font-bold">2</p>
               </div>
               <BookOpen className="h-8 w-8 text-primary" />
@@ -71,26 +90,33 @@ export default function StudentDashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockEnrolledCourses.map((course) => (
+            {enrollmentData?.data?.map((course) => (
               <Card key={course.id}>
                 <CardContent className="p-4">
                   <div className="flex flex-col md:flex-row gap-4">
                     <img
-                      src={course.thumbnail || "/placeholder.svg"}
+                      src={course.courseId.thumbnail || "/placeholder.svg"}
                       alt={course.title}
                       className="w-full md:w-32 h-20 object-cover rounded"
                     />
                     <div className="flex-1 space-y-2">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h3 className="font-semibold">{course.title}</h3>
-                          <p className="text-sm text-muted-foreground">Last watched: {course.lastWatched}</p>
+                          <h3 className="font-semibold">
+                            {course.courseId.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Batch : {course.batch}
+                          </p>
                         </div>
                         <Badge variant="secondary">{course.progress}%</Badge>
                       </div>
                       <Progress value={course.progress} />
                       <Button size="sm" asChild>
-                        <Link to={`/student/course/${course.id}/player`}>Continue</Link>
+                        <Link
+                          to={`/student/course/${course.courseId._id}/${course._id}/player`}>
+                          Continue
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -119,7 +145,9 @@ export default function StudentDashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Data Analysis Project</p>
-                  <p className="text-sm text-muted-foreground">Due in 10 days</p>
+                  <p className="text-sm text-muted-foreground">
+                    Due in 10 days
+                  </p>
                 </div>
                 <Badge>Submitted</Badge>
               </div>
@@ -133,11 +161,13 @@ export default function StudentDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockEnrolledCourses.map((course) => (
+              {enrollmentData?.data?.map((course) => (
                 <div key={course.id} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{course.title}</span>
-                    <span className="text-muted-foreground">{course.progress}%</span>
+                    <span className="font-medium">{course.courseId.title}</span>
+                    <span className="text-muted-foreground">
+                      {course.progress}%
+                    </span>
                   </div>
                   <Progress value={course.progress} />
                 </div>
@@ -147,5 +177,5 @@ export default function StudentDashboardPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
