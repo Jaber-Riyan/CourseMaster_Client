@@ -11,22 +11,30 @@ import {
 } from "@/redux/features/Auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { toast } from "sonner";
+import Loading from "./Loading";
 
 export default function AppSidebar() {
   const location = useLocation();
-  const { data: userData } = useUserInfoQuery(undefined);
+  const { data: userData, isLoading } = useUserInfoQuery(undefined);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   // const routes = studentSidebarItems;
   const routes = getSidebarItems(userData?.data?.role);
 
-  const handleLogout = () => {
-    logout(undefined);
-    dispatch(authApi.util.resetApiState());
-    toast.info("Logout Successfully!!");
-    navigate("/auth/login");
+  const handleLogout = async () => {
+    try {
+      await logout(undefined).unwrap();
+
+      dispatch(authApi.util.resetApiState());
+
+      toast.info("Logged out");
+      navigate("/auth/login");
+    } catch (err) {
+      console.error(err);
+    }
   };
+  if (isLoading) return <Loading />;
   return (
     <div className="flex flex-col h-full border-r bg-background">
       <div className="p-6 border-b">
