@@ -15,6 +15,8 @@ import RegisterPage from "@/pages/Auth/Register";
 import Unauthorized from "@/pages/Unauthorized";
 import NotFound from "@/pages/NotFound";
 import { authPageBlock } from "@/utils/authPagesBlock";
+import CourseDetailPage from "@/pages/CourseDetails";
+import EnrollPage from "@/pages/EnrollPage";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +42,14 @@ export const router = createBrowserRouter([
       {
         Component: RegisterPage,
         path: "/auth/register",
+      },
+      {
+        Component: CourseDetailPage,
+        path: "/course/:id/:batch/:startDate",
+      },
+      {
+        Component: EnrollPage,
+        path: "/enroll/:courseId/:batch",
       },
     ],
   },

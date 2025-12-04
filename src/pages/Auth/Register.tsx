@@ -76,7 +76,7 @@ export default function RegisterPage() {
       console.log(result);
       if (result.success) {
         toast.success(result.message, { id: toastId });
-        return navigate("/auth/login", { state: data.email });
+        return navigate("/auth/login", { state: email });
       }
       if (!result.success) {
         return toast.error(result.message, { id: toastId });

@@ -47,17 +47,17 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    const toastId = toast.loading("Logging...");
     const loginInfo = {
       email: data.email,
       password: data.password,
     };
     try {
+      const toastId = toast.loading("Logging...");
       const result = await login(loginInfo).unwrap();
       console.log(result);
       if (result.success) {
         toast.success(result.message, { id: toastId });
-        return navigate(`/${result.data && result.data?.user?.role}`);
+        return navigate(`/`);
       } else if (!result.success) {
         return toast.error(result.message, { id: toastId });
       }

@@ -11,6 +11,7 @@ import { Check, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useParams } from "react-router";
 
 export default function CoursePlayerPage() {
   const [currentLesson, setCurrentLesson] = useState(syllabus[0].content[0]);

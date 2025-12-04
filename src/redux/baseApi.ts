@@ -8,6 +8,6 @@ export const baseApi = createApi({
     //     baseUrl: config.baseUrl,
     //     credentials: "include"
     // }),
-    tagTypes: ["USER", "COURSE", "ENROLLMENT"],
+    tagTypes: ["USER", "COURSE","PUBLIC_COURSES", "ENROLLMENT"],
     endpoints: () => ({})
 })

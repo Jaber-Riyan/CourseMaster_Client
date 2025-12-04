@@ -1,4 +1,4 @@
-import { Spinner } from "@/components/ui/spinner";
+import Loading from "@/components/Loading";
 import { useUserInfoQuery } from "@/redux/features/Auth/auth.api";
 import type { TRole } from "@/types";
 import type { ComponentType } from "react";
@@ -10,13 +10,16 @@ export const withAuth = (Component: ComponentType, requiredRole?: TRole) => {
     const { data, isLoading } = useUserInfoQuery(undefined);
     console.log(data?.data?.role, isLoading, requiredRole);
 
-    if (!isLoading && !data?.data?.email) {
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (!data?.data?.email) {
       toast.info("Your are Not Login Yet!!");
-      return <Navigate to={"/auth/login"} />;
+      return <Navigate to={"/auth/login"} replace />;
     }
 
     if (
-      !isLoading &&
       requiredRole &&
       requiredRole.toLowerCase() !== data?.data?.role.toString()
     ) {
