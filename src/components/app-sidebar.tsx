@@ -1,15 +1,32 @@
 import { cn } from "@/lib/utils";
-import { adminSidebarItems } from "@/routes/adminSidebarItems";
-import { studentSidebarItems } from "@/routes/studentSidebarItems";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { ModeToggle } from "./Layout/ModeToggler";
 import { Button } from "./ui/button";
 import { GraduationCap, Home, LogOut } from "lucide-react";
+import { getSidebarItems } from "@/utils/getSidebarItems";
+import {
+  authApi,
+  useLogoutMutation,
+  useUserInfoQuery,
+} from "@/redux/features/Auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { toast } from "sonner";
 
 export default function AppSidebar() {
   const location = useLocation();
+  const { data: userData } = useUserInfoQuery(undefined);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [logout] = useLogoutMutation();
   // const routes = studentSidebarItems;
-  const routes = adminSidebarItems;
+  const routes = getSidebarItems(userData?.data?.role);
+
+  const handleLogout = () => {
+    logout(undefined);
+    dispatch(authApi.util.resetApiState());
+    toast.info("Logout Successfully!!");
+    navigate("/auth/login");
+  };
   return (
     <div className="flex flex-col h-full border-r bg-background">
       <div className="p-6 border-b">
@@ -54,11 +71,15 @@ export default function AppSidebar() {
         <div className="flex justify-center">
           <ModeToggle />
         </div>
-        <Button variant="ghost" className="w-full justify-start" asChild>
-          <Link to="/">
+        <Button
+          onClick={handleLogout}
+          variant="ghost"
+          className="w-full justify-start cursor-pointer"
+          asChild>
+          <div>
             <LogOut className="mr-2 h-4 w-4" />
             Logout
-          </Link>
+          </div>
         </Button>
       </div>
     </div>

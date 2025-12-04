@@ -1,4 +1,4 @@
 export const role = {
-    admin: "ADMIN",
-    student: "STUDENT"
+    admin: "admin",
+    student: "student"
 }

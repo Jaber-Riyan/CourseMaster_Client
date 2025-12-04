@@ -1,12 +1,32 @@
 import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ModeToggle } from "./ModeToggler";
 import React from "react";
+import {
+  authApi,
+  useLogoutMutation,
+  useUserInfoQuery,
+} from "@/redux/features/Auth/auth.api";
+import { role } from "@/constants/role";
+import { useAppDispatch } from "@/redux/hook";
+import { toast } from "sonner";
+
+const navigationLinks = [
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/Courses", label: "Courses", role: "PUBLIC" },
+  { href: "/contact", label: "Contact", role: "PUBLIC" },
+  { href: "/admin", label: "Dashboard", role: role.admin },
+  { href: "/student", label: "Dashboard", role: role.student },
+];
 
 export function Navbar() {
   const [isVisible, setIsVisible] = React.useState(true);
   const [lastScrollY, setLastScrollY] = React.useState(0);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { data } = useUserInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +41,13 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  const handleLogout = () => {
+    logout(undefined);
+    dispatch(authApi.util.resetApiState());
+    toast.info("Logout Successfully!!");
+    navigate("/auth/login");
+  };
 
   return (
     <header
@@ -50,6 +77,7 @@ export function Navbar() {
           <Button asChild>
             <Link to="/auth/register">Register</Link>
           </Button>
+          <Button onClick={handleLogout}>Logout</Button>
         </nav>
       </div>
     </header>

@@ -12,6 +12,9 @@ import CoursePlayerPage from "@/pages/CoursePlayerPage";
 import CoursesPage from "@/pages/CoursesPage";
 import LoginPage from "@/pages/Auth/Login";
 import RegisterPage from "@/pages/Auth/Register";
+import Unauthorized from "@/pages/Unauthorized";
+import NotFound from "@/pages/NotFound";
+import { authPageBlock } from "@/utils/authPagesBlock";
 
 export const router = createBrowserRouter([
   {
@@ -56,5 +59,13 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to={"/admin/dashboard"} /> },
       ...generateRoutes(adminSidebarItems),
     ],
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorized",
+  },
+  {
+    Component: NotFound,
+    path: "*",
   },
 ]);

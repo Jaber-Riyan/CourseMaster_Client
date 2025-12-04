@@ -1,30 +1,97 @@
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, Lock, User } from "lucide-react"
-import { Link, useNavigate } from "react-router"
-import PageTitle from "@/components/PageTitle"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Link, useNavigate } from "react-router";
+import PageTitle from "@/components/PageTitle";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import Password from "@/components/ui/Password";
+import {
+  useRegisterMutation,
+  useUserInfoQuery,
+} from "@/redux/features/Auth/auth.api";
+import { useEffect } from "react";
+
+const registerSchema = z.object({
+  name: z
+    .string()
+    .min(3, {
+      error: "Name is too short",
+    })
+    .max(50),
+  email: z.email(),
+  password: z.string().min(8, {
+    message: "Password should be minimum 6 character",
+  }),
+});
 
 export default function RegisterPage() {
-  const navigate = useNavigate()
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  })
+  const navigate = useNavigate();
+  const [register] = useRegisterMutation();
+  // const { data } = useUserInfoQuery(undefined);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Mock signup - redirect to student dashboard
-    navigate("/student/dashboard")
-  }
+  // useEffect(() => {
+  //   if (data?.data?.email) {
+  //     navigate(`/${data?.data?.role}`);
+  //   }
+  // }, [data?.data?.role, data?.data?.email, navigate]);
+
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+    const toastId = toast.loading("Loading...");
+
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+    try {
+      console.log(userInfo);
+      const result = await register(userInfo).unwrap();
+      console.log(result);
+      if (result.success) {
+        toast.success(result.message, { id: toastId });
+        return navigate("/auth/login", { state: data.email });
+      }
+      if (!result.success) {
+        return toast.error(result.message, { id: toastId });
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (error) {
+        toast.error(error.data?.message, { id: toastId });
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-linear-to-br from-background to-muted">
-        <PageTitle title="Register"/>
+      <PageTitle title="Register" />
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4 text-center">
           <div>
@@ -33,62 +100,70 @@ export default function RegisterPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  placeholder="John Doe"
-                  className="pl-10"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="pl-10"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className="pl-10"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-            <Button type="submit" className="w-full">
-              Sign Up
-            </Button>
-          </form>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your public display name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="john.doe@company.com" {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your public display email.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Password {...field} />
+                    </FormControl>
+                    <FormDescription className="sr-only">
+                      This is your password.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full">
+                Register
+              </Button>
+            </form>
+          </Form>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
             </div>
           </div>
 
@@ -102,13 +177,17 @@ export default function RegisterPage() {
           </div>
 
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">Already have an account? </span>
-            <Link to="/auth/login" className="text-primary hover:underline font-medium">
+            <span className="text-muted-foreground">
+              Already have an account?{" "}
+            </span>
+            <Link
+              to="/auth/login"
+              className="text-primary hover:underline font-medium">
               Login
             </Link>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
