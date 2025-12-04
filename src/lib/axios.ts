@@ -2,7 +2,7 @@ import config from "@/config";
 import axios from "axios"
 
 export const axiosInstance = axios.create({
-    baseURL: config.productionServerUrl,
+    baseURL: config.nodeEnv === "development" ? config.localServerUrl : config.productionServerUrl,
     withCredentials: true
 });
 
