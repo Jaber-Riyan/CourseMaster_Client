@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
+import { useUserInfoQuery } from "@/redux/features/Auth/auth.api"
 
 export default function AdminSettingsPage() {
+  const { data } = useUserInfoQuery(undefined);
   return (
     <div className="p-8 space-y-8">
       <div>
@@ -22,7 +24,7 @@ export default function AdminSettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="platformName">Platform Name</Label>
-              <Input id="platformName" defaultValue="CourseMaster" />
+              <Input id="platformName" defaultValue={data?.data?.name}/>
             </div>
             <div className="space-y-2">
               <Label htmlFor="platformDescription">Description</Label>
@@ -34,7 +36,7 @@ export default function AdminSettingsPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="supportEmail">Support Email</Label>
-              <Input id="supportEmail" type="email" defaultValue="support@coursemaster.com" />
+              <Input id="supportEmail" type="email" defaultValue={data?.data?.email} />
             </div>
             <Button>Save Changes</Button>
           </CardContent>

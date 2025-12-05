@@ -64,7 +64,7 @@ export default function BatchForm() {
 
   const onSubmit = async (values: BatchSchemaData) => {
     const offset = 6 * 60; // +6 hours Bangladesh
-    const localDate = new Date(values.startDate.getTime() - offset * 60 * 1000);
+    const localDate = new Date(values.startDate.getTime() + offset * 60 * 1000);
 
     // Format as YYYY-MM-DD
     const yyyy = localDate.getFullYear();

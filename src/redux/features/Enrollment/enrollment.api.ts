@@ -29,8 +29,14 @@ export const enrollmentApi = baseApi.injectEndpoints({
                 method: "PATCH"
             }),
             invalidatesTags: ["ENROLLMENT", "USER"]
+        }),
+        getEnrollments: builder.query({
+            query: () => ({
+                url: `/enrollment/admin/enrollments`,
+                method: "GET",
+            }),
         })
     })
 })
 
-export const { useMakeEnrollmentMutation, useEnrollmentUserQuery, useEnrollmentProgressQuery, useMarkAsCompleteMutation } = enrollmentApi
+export const { useMakeEnrollmentMutation, useEnrollmentUserQuery, useEnrollmentProgressQuery, useMarkAsCompleteMutation, useGetEnrollmentsQuery } = enrollmentApi

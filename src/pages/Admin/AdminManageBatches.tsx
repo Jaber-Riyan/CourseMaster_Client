@@ -1,9 +1,15 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -11,15 +17,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { mockBatches, mockCourses } from "@/lib/mock-data"
-import { Plus, Edit, Trash2 } from "lucide-react"
-import BatchForm from "@/components/modules/AdminDashboard/AddBatchForm"
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { mockBatches, mockCourses } from "@/lib/mock-data";
+import { Plus, Edit, Trash2 } from "lucide-react";
+import BatchForm from "@/components/modules/AdminDashboard/AddBatchForm";
+import { useAvailableCoursesQuery } from "@/redux/features/Course/course.api";
+import Loading from "@/components/Loading";
 
 export default function AdminBatchesPage() {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const { data: fetchAllCourses, isLoading } =
+    useAvailableCoursesQuery(undefined);
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="p-8 space-y-8">
@@ -80,44 +105,45 @@ export default function AdminBatchesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>All Batches</CardTitle>
-          <CardDescription>Total: {mockBatches.length} batches</CardDescription>
+          <CardTitle>All Running Courses</CardTitle>
+          <CardDescription>Total: {fetchAllCourses?.data?.availableCourses?.length} courses</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-green-500">
               <TableRow>
-                <TableHead>Batch Name</TableHead>
-                <TableHead>Course</TableHead>
-                <TableHead>Start Date</TableHead>
-                <TableHead>End Date</TableHead>
-                <TableHead>Students</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="font-semibold">Course</TableHead>
+                <TableHead className="font-semibold">Start Date</TableHead>
+                <TableHead className="text-right font-semibold">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockBatches.map((batch) => (
-                <TableRow key={batch.id}>
-                  <TableCell className="font-medium">{batch.name}</TableCell>
-                  <TableCell>{batch.courseName}</TableCell>
-                  <TableCell>{new Date(batch.startDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(batch.endDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{batch.students}</TableCell>
+              {fetchAllCourses?.data?.availableCourses?.map((batch,index) => (
+                <TableRow key={batch._id}>
+                  <TableCell>{batch.title}</TableCell>
                   <TableCell>
-                    <Badge className="bg-green-500">
-                      {batch.status.charAt(0).toUpperCase() + batch.status.slice(1)}
-                    </Badge>
+                    {batch?._id ===
+                    fetchAllCourses?.data?.anotherAvailableCourseWithQuery[
+                      index
+                    ]._id &&
+                  fetchAllCourses?.data?.anotherAvailableCourseWithQuery[index]
+                    .upcomingBatches?.[0]?.startDate
+                    ? new Date(
+                        fetchAllCourses?.data?.anotherAvailableCourseWithQuery[
+                          index
+                        ].upcomingBatches?.[0]?.startDate
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : ""}
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
+                    <Badge className="bg-green-500 font-semibold shadow-[0px_0px_20px_#fff]">
+                      {"Active".charAt(0).toUpperCase() +
+                        "Active".slice(1)}
+                    </Badge>
                   </TableCell>
                 </TableRow>
               ))}
@@ -126,7 +152,7 @@ export default function AdminBatchesPage() {
         </CardContent>
       </Card>
 
-      <BatchForm/>
+      <BatchForm />
     </div>
-  )
+  );
 }
