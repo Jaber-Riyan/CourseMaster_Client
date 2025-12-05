@@ -18,7 +18,7 @@ export default function StudentDashboardPage() {
   const { data, isLoading: userIsLoading } = useUserInfoQuery(undefined);
   const { data: enrollmentData, isLoading: enrollmentDataIsLoading } =
     useEnrollmentUserQuery(undefined);
-  console.log(enrollmentData);
+  console.log(data);
 
   if (userIsLoading || enrollmentDataIsLoading) return <Loading />;
 
@@ -41,7 +41,9 @@ export default function StudentDashboardPage() {
                 <p className="text-sm text-muted-foreground">
                   Enrolled Courses
                 </p>
-                <p className="text-2xl font-bold">2</p>
+                <p className="text-2xl font-bold">
+                  {data?.data?.enrolledCourses.length}
+                </p>
               </div>
               <BookOpen className="h-8 w-8 text-primary" />
             </div>
