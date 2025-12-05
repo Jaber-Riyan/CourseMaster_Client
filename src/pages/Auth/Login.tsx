@@ -51,8 +51,9 @@ export default function LoginPage() {
       email: data.email,
       password: data.password,
     };
+    let toastId;
     try {
-      const toastId = toast.loading("Logging...");
+      toastId = toast.loading("Logging...");
       const result = await login(loginInfo).unwrap();
       console.log(result);
       if (result.success) {
@@ -64,7 +65,7 @@ export default function LoginPage() {
     } catch (error: any) {
       console.error(error);
       if (error) {
-        toast.error(error.data?.message);
+        toast.error(error.data?.message, { id: toastId });
       }
     }
   };

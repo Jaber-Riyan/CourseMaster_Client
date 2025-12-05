@@ -33,7 +33,7 @@ export default function CoursesPage() {
     (async () => {
       if (!isLoading) {
         const data = await fetchAllCourses.data;
-        const courses = data?.availableCoursesFromQuery || [];
+        const courses = data?.availableCourses || [];
         setOriginalData(courses);
         setFilteredData(courses);
       }
@@ -42,7 +42,12 @@ export default function CoursesPage() {
 
   // 🧠 Client-side filtering
   useEffect(() => {
-    let data = [...originalData];
+    let data = [...(fetchAllCourses?.data?.availableCourses || [])];
+
+    // ---- Category ----
+    if (category && category !== "All") {
+      data = data.filter((c) => c.category?.includes(category));
+    }
 
     // ---- Search ----
     if (searchTerm) {
@@ -51,16 +56,6 @@ export default function CoursesPage() {
           c.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           c.instructor.toLowerCase().includes(searchTerm.toLowerCase())
       );
-    }
-
-    // ---- Category ----
-    if (category) {
-      if (category === "All")
-        return setFilteredData(
-          fetchAllCourses?.data?.availableCoursesFromQuery
-        );
-      console.log(category);
-      data = data.filter((c) => c.category?.includes(category));
     }
 
     // ---- Sort ----
@@ -74,13 +69,7 @@ export default function CoursesPage() {
 
     setFilteredData(data);
     setPage(1);
-  }, [
-    searchTerm,
-    category,
-    sort,
-    originalData,
-    fetchAllCourses?.data?.availableCoursesFromQuery,
-  ]);
+  }, [searchTerm, category, sort, fetchAllCourses?.data?.availableCourses]);
 
   // ---- Pagination ----
   const start = (page - 1) * limit;
@@ -89,11 +78,11 @@ export default function CoursesPage() {
   const totalPages = Math.ceil(filteredData.length / limit);
 
   if (isLoading) return <Loading />;
-  console.log(fetchAllCourses?.data?.anotherAvailableCourseWithQuery);
+  console.log(fetchAllCourses?.data);
 
   const categories = Array.from(
     new Set(
-      fetchAllCourses?.data?.availableCoursesFromQuery?.flatMap(
+      fetchAllCourses?.data?.availableCourses?.flatMap(
         (c: any) => c.category
       ) ?? []
     )
@@ -126,7 +115,6 @@ export default function CoursesPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="All">All</SelectItem>
-            <SelectItem value="AI">AI</SelectItem>
 
             {categories.map((cat: any) => {
               const cap = capitalizeCategory(cat);

@@ -139,7 +139,7 @@ export default function CourseDetailPage() {
                       <AccordionContent>
                         {item?.content &&
                           item?.content.map((content) => (
-                            <p className="text-muted-foreground flex gap-2 items-center">
+                            <p className="text-muted-foreground flex gap-2 mb-2 items-center">
                               <Play size={18} />
                               <span>{content.title}</span>
                             </p>

@@ -15,7 +15,38 @@ export const courseApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        adminAllCourses: builder.query({
+            query: () => ({
+                url: `/courses/admin/all-courses`,
+                method: "GET",
+            }),
+            providesTags: ["ADMIN_COURSES"]
+        }),
+        createCourse: builder.mutation({
+            query: (createCourseData) => ({
+                url: `/courses/create`,
+                method: "POST",
+                data: createCourseData
+            }),
+            invalidatesTags: ["ADMIN_COURSES"]
+        }),
+        addCourseModule: builder.mutation({
+            query: ({ courseId, ...addCourseModuleData }) => ({
+                url: `/courses/add-module/${courseId}`,
+                method: "PATCH",
+                data: addCourseModuleData
+            }),
+            invalidatesTags: ["ADMIN_COURSES", "COURSE"]
+        }),
+        addCourseBatch: builder.mutation({
+            query: ({ courseId, ...addCourseBatchData }) => ({
+                url: `/courses/add-batch/${courseId}`,
+                method: "PATCH",
+                data: addCourseBatchData
+            }),
+            invalidatesTags: ["ADMIN_COURSES", "COURSE"]
+        }),
     })
 })
 
-export const { useAvailableCoursesQuery, useSingleCourseQuery } = courseApi
+export const { useAvailableCoursesQuery, useSingleCourseQuery, useAdminAllCoursesQuery, useCreateCourseMutation, useAddCourseModuleMutation, useAddCourseBatchMutation } = courseApi

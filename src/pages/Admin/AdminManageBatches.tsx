@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { mockBatches, mockCourses } from "@/lib/mock-data"
 import { Plus, Edit, Trash2 } from "lucide-react"
+import BatchForm from "@/components/modules/AdminDashboard/AddBatchForm"
 
 export default function AdminBatchesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -27,7 +28,7 @@ export default function AdminBatchesPage() {
           <h1 className="text-3xl font-bold">Manage Batches</h1>
           <p className="text-muted-foreground">Organize courses into batches</p>
         </div>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        {/* <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
@@ -74,7 +75,7 @@ export default function AdminBatchesPage() {
               </Button>
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </div>
 
       <Card>
@@ -124,6 +125,8 @@ export default function AdminBatchesPage() {
           </Table>
         </CardContent>
       </Card>
+
+      <BatchForm/>
     </div>
   )
 }
