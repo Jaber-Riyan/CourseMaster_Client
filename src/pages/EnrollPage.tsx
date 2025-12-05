@@ -15,22 +15,29 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { useUserInfoQuery } from "@/redux/features/Auth/auth.api";
 import { useEffect } from "react";
 import Loading from "@/components/Loading";
+import { useMakeEnrollmentMutation } from "@/redux/features/Enrollment/enrollment.api";
+import { toast } from "sonner";
 
 // ------- Validation Schema -------
 const enrollSchema = z.object({
   transactionId: z
     .string()
-    .min(6, "Transaction ID must be at least 6 characters"),
+    .min(6, "Transaction ID must be at least 6 characters")
+    .regex(
+      /^TXN[0-9]{6,12}$/,
+      "Transaction ID is invalid Dummy transaction Id : TXN123456"
+    ),
 });
 
 export default function EnrollPage() {
+  const [makeEnrollmentMutation] = useMakeEnrollmentMutation();
   const params = useParams();
   const location = useLocation();
 
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useUserInfoQuery(undefined);
-  console.log(data);
+  const { data: userData, isLoading, isError } = useUserInfoQuery(undefined);
+  console.log(userData);
 
   const form = useForm<z.infer<typeof enrollSchema>>({
     resolver: zodResolver(enrollSchema),
@@ -40,30 +47,47 @@ export default function EnrollPage() {
   });
 
   // -------- Form Handler --------
-  const onSubmit = (data: z.infer<typeof enrollSchema>) => {
+  const onSubmit = async (data: z.infer<typeof enrollSchema>) => {
     const enrollmentInfo = {
       courseId: params.courseId,
       batch: params.batch,
+      transactionId: data.transactionId,
     };
-    console.log("Transaction ID:", data.transactionId);
-
-    // ⬇️ ekhane API call korte parba
-    // await enrollCourse(data.transactionId)
+    console.log("Enrollment Info:", enrollmentInfo);
+    try {
+      const result = await makeEnrollmentMutation(enrollmentInfo).unwrap();
+      console.log(result.success);
+      if (result.success) {
+        toast.success(result.message);
+        return navigate(`/${userData?.data?.role}`);
+      } else if (!result.success) {
+        toast.error(result.message);
+        return navigate("/courses");
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (error) {
+        toast.error(error.data?.message);
+        if (error?.data?.message === "You Already Enrolled In This Batch")
+          return navigate(`/${userData?.data?.role}`);
+        else return navigate(`/`);
+      }
+    }
   };
 
   useEffect(() => {
     // 🚫 Not logged in
-    if (!isLoading && (!data || isError)) {
+    if (!isLoading && (!userData || isError)) {
       //   console.log(location.pathname);
       navigate("/auth/login");
     }
-  }, [data, isLoading, isError, navigate, location.pathname]);
+  }, [userData, isLoading, isError, navigate, location.pathname]);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (!data) return null;
+  if (!userData) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">

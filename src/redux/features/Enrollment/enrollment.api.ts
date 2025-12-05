@@ -2,6 +2,14 @@ import { baseApi } from "@/redux/baseApi";
 
 export const enrollmentApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        makeEnrollment: builder.mutation({
+            query: (makeEnrollmentInfo) => ({
+                url: "/enrollment/enroll",
+                method: "POST",
+                data: makeEnrollmentInfo
+            }),
+            invalidatesTags: ["ENROLLMENT", "USER"]
+        }),
         enrollmentUser: builder.query({
             query: () => ({
                 url: "/enrollment/me",
@@ -25,4 +33,4 @@ export const enrollmentApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useEnrollmentUserQuery, useEnrollmentProgressQuery, useMarkAsCompleteMutation } = enrollmentApi
+export const { useMakeEnrollmentMutation, useEnrollmentUserQuery, useEnrollmentProgressQuery, useMarkAsCompleteMutation } = enrollmentApi

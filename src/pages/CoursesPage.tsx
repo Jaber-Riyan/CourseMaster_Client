@@ -87,9 +87,9 @@ export default function CoursesPage() {
   const end = start + limit;
   const paginatedData = filteredData.slice(start, end);
   const totalPages = Math.ceil(filteredData.length / limit);
-  console.log(fetchAllCourses);
 
   if (isLoading) return <Loading />;
+  console.log(fetchAllCourses?.data?.anotherAvailableCourseWithQuery);
 
   const categories = Array.from(
     new Set(
@@ -154,7 +154,7 @@ export default function CoursesPage() {
 
       {/* Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {paginatedData.map((course) => (
+        {paginatedData.map((course, index) => (
           <Card key={course._id}>
             <img
               src={course.thumbnail}
@@ -170,9 +170,33 @@ export default function CoursesPage() {
             </CardHeader>
 
             <CardContent>
-              <p className="font-bold text-lg">${course.price}</p>
+              <div className="flex justify-between items-center">
+                <p className="font-bold text-white/70">
+                  Start Date:{" "}
+                  {course?._id ===
+                    fetchAllCourses?.data?.anotherAvailableCourseWithQuery[
+                      index
+                    ]._id &&
+                  fetchAllCourses?.data?.anotherAvailableCourseWithQuery[index]
+                    .upcomingBatches?.[0]?.startDate
+                    ? new Date(
+                        fetchAllCourses?.data?.anotherAvailableCourseWithQuery[
+                          index
+                        ].upcomingBatches?.[0]?.startDate
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : ""}
+                </p>
+                <p className="font-bold text-lg">BDT {course.price}</p>
+              </div>
               <Button className="w-full mt-3 cursor-pointer">
-                <Link to={"/"}>View Details</Link>
+                <Link
+                  to={`/course/${course?._id}/${fetchAllCourses?.data?.anotherAvailableCourseWithQuery[index].upcomingBatches?.[0]?.name}/${fetchAllCourses?.data?.anotherAvailableCourseWithQuery[index].upcomingBatches?.[0]?.startDate}`}>
+                  View Details
+                </Link>
               </Button>
             </CardContent>
           </Card>
