@@ -14,6 +14,7 @@ export const courseApi = baseApi.injectEndpoints({
                 url: `/courses/${id}`,
                 method: "GET",
             }),
+            providesTags: ["COURSE"]
         }),
         adminAllCourses: builder.query({
             query: () => ({
@@ -36,7 +37,7 @@ export const courseApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 data: addCourseModuleData
             }),
-            invalidatesTags: ["ADMIN_COURSES", "COURSE"]
+            invalidatesTags: ["ADMIN_COURSES", "COURSE", "ENROLLMENT", "USER"]
         }),
         addCourseBatch: builder.mutation({
             query: ({ courseId, ...addCourseBatchData }) => ({
@@ -46,7 +47,19 @@ export const courseApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["ADMIN_COURSES", "COURSE"]
         }),
+        getAssignment: builder.query({
+            query: ({ courseId, moduleId }) => ({
+                url: `/courses/get-assignment/${courseId}/${moduleId}`,
+                method: "GET",
+            }),
+        }),
+        getQuiz: builder.query({
+            query: ({ courseId, moduleId }) => ({
+                url: `/courses/get-quiz/${courseId}/${moduleId}`,
+                method: "GET",
+            }),
+        }),
     })
 })
 
-export const { useAvailableCoursesQuery, useSingleCourseQuery, useAdminAllCoursesQuery, useCreateCourseMutation, useAddCourseModuleMutation, useAddCourseBatchMutation } = courseApi
+export const { useAvailableCoursesQuery, useSingleCourseQuery, useAdminAllCoursesQuery, useCreateCourseMutation, useAddCourseModuleMutation, useAddCourseBatchMutation, useGetAssignmentQuery, useGetQuizQuery } = courseApi

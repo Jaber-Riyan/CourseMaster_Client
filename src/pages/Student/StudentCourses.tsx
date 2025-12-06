@@ -68,14 +68,11 @@ export default function StudentCoursesPage() {
                 </span>
               </div>
 
-              <div className="flex gap-2">
-                <Button className="flex-1" asChild>
+              <div className="">
+                <Button className="w-full" asChild>
                   <Link to={`/student/course/${course.courseId._id}/${course._id}/player`}>
                     Continue Learning
                   </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to={`/course/${course.id}`}>Details</Link>
                 </Button>
               </div>
             </CardContent>
