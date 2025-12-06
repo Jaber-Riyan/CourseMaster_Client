@@ -195,25 +195,74 @@ export default function CoursePlayerPage() {
                       </div>
                     </div>
                   ))}
-                  {singleCourse?.data?.syllabus[i].assignment && (
-                    <Button
-                      variant={"link"}
-                      className="cursor-pointer w-full flex justify-start bg-accent p-6">
-                      <Link
-                        className="cursor-pointer flex justify-start items-center gap-2"
-                        to={"/"}>
-                        <Book /> <span>Assignment</span>
-                      </Link>
-                    </Button>
-                  )}
+                  
+                  {/* Quiz  */}
                   {singleCourse?.data?.syllabus[i].quiz && (
                     <Button
                       variant={"link"}
-                      className="cursor-pointer w-full flex justify-start bg-accent p-6">
+                      className={`cursor-pointer w-full flex justify-start p-6 ${
+                        courseProgress?.modules[i]?.quiz?.attempted === true
+                          ? "bg-green-500"
+                          : "bg-accent"
+                      }`}>
                       <Link
                         className="cursor-pointer flex justify-start items-center gap-2"
-                        to={"/"}>
-                        <FileQuestion /> <span>Quiz</span>
+                        to={`/student/quiz/submission/${params.enrollmentId}/${
+                          params.id
+                        }/${i + 1}/${
+                          courseProgress?.modules[i]?.quiz?.attempted
+                        }/${
+                          courseProgress?.modules[i]?.quiz?.score > 0
+                            ? courseProgress?.modules[i]?.quiz?.score
+                            : 0
+                        }`}>
+                        <FileQuestion />{" "}
+                        <span>
+                          Quiz (
+                          {courseProgress?.modules[i]?.quiz?.attempted
+                            ? "Complete"
+                            : "Not Complete"}
+                          ) Score -{" "}
+                          {courseProgress?.modules[i]?.quiz?.score > 0
+                            ? courseProgress?.modules[i]?.quiz?.score
+                            : 0}
+                        </span>
+                      </Link>
+                    </Button>
+                  )}
+
+                  {/* Assignment  */}
+                  {singleCourse?.data?.syllabus[i].assignment && (
+                    <Button
+                      variant={"link"}
+                      className={`cursor-pointer w-full flex justify-start p-6 ${
+                        courseProgress?.modules[i]?.assignment?.submitted ===
+                        true
+                          ? "bg-green-500"
+                          : "bg-accent"
+                      }`}>
+                      <Link
+                        className="cursor-pointer flex justify-start items-center gap-2"
+                        to={`/student/assignment/submission/${
+                          params.enrollmentId
+                        }/${params.id}/${i + 1}/${
+                          courseProgress?.modules[i]?.assignment?.submitted
+                        }/${
+                          courseProgress?.modules[i]?.assignment?.grade > 0
+                            ? courseProgress?.modules[i]?.assignment?.grade
+                            : 0
+                        }`}>
+                        <Book />{" "}
+                        <span>
+                          Assignment (
+                          {courseProgress?.modules[i]?.assignment?.submitted
+                            ? "Submitted"
+                            : "Not Submitted"}
+                          ) Mark -{" "}
+                          {courseProgress?.modules[i]?.assignment?.grade > 0
+                            ? courseProgress?.modules[i]?.assignment?.grade
+                            : "Not Review"}
+                        </span>
                       </Link>
                     </Button>
                   )}

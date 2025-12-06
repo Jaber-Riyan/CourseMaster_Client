@@ -14,9 +14,10 @@ import LoginPage from "@/pages/Auth/Login";
 import RegisterPage from "@/pages/Auth/Register";
 import Unauthorized from "@/pages/Unauthorized";
 import NotFound from "@/pages/NotFound";
-import { authPageBlock } from "@/utils/authPagesBlock";
 import CourseDetailPage from "@/pages/CourseDetails";
 import EnrollPage from "@/pages/EnrollPage";
+import AssignmentSubmitPage from "@/pages/AssignmentSubmitPage";
+import QuizSubmitPage from "@/pages/QuizSubmitPage";
 
 export const router = createBrowserRouter([
   {
@@ -58,7 +59,18 @@ export const router = createBrowserRouter([
     path: "/student",
     children: [
       { index: true, element: <Navigate to={"/student/dashboard"} /> },
-      { element: <CoursePlayerPage />, path: "/student/course/:id/:enrollmentId/player" },
+      {
+        element: <CoursePlayerPage />,
+        path: "/student/course/:id/:enrollmentId/player",
+      },
+      {
+        element: <AssignmentSubmitPage />,
+        path: "/student/assignment/submission/:enrollmentId/:courseId/:moduleId/:submitted/:mark",
+      },
+      {
+        element: <QuizSubmitPage />,
+        path: "/student/quiz/submission/:enrollmentId/:courseId/:moduleId/:submitted/:mark",
+      },
       ...generateRoutes(studentSidebarItems),
     ],
   },
