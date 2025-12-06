@@ -38,9 +38,9 @@ export const authApi = baseApi.injectEndpoints({
                 url: "/auth/logout",
                 method: "POST"
             }),
-            invalidatesTags: ["USER"]
+            invalidatesTags: ["USER", "ADMIN_COURSES", "COURSE", "ENROLLMENT", "PENDING_ASSIGNMENTS", "PUBLIC_COURSES"]
         }),
     })
 })
 
-export const { useRegisterMutation, useLoginMutation, useUserInfoQuery,useUpdateUserMutation, useLogoutMutation } = authApi
+export const { useRegisterMutation, useLoginMutation, useUserInfoQuery, useUpdateUserMutation, useLogoutMutation } = authApi
