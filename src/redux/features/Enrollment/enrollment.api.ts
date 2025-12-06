@@ -28,15 +28,47 @@ export const enrollmentApi = baseApi.injectEndpoints({
                 url: `/enrollment/mark/progress/${markAsCompleteInfo.courseId}/${markAsCompleteInfo.batch}/${markAsCompleteInfo.moduleId}/${markAsCompleteInfo.lessonId}/${markAsCompleteInfo.enrollmentId}`,
                 method: "PATCH"
             }),
-            invalidatesTags: ["ENROLLMENT", "USER"]
+            invalidatesTags: ["ENROLLMENT", "USER", "COURSE", "ADMIN_COURSES", "PUBLIC_COURSES"]
         }),
         getEnrollments: builder.query({
             query: () => ({
                 url: `/enrollment/admin/enrollments`,
                 method: "GET",
             }),
-        })
+            providesTags: ["ENROLLMENT"]
+        }),
+        submitAssignment: builder.mutation({
+            query: ({ enrollmentId, moduleId, answer }) => ({
+                url: `/enrollment/submit/assignment/${enrollmentId}/${moduleId}`,
+                method: "POST",
+                data: { answer }
+            }),
+            invalidatesTags: ["COURSE", "ENROLLMENT", "USER"]
+        }),
+        submitQuiz: builder.mutation({
+            query: ({ enrollmentId, moduleId, score }) => ({
+                url: `/enrollment/submit/quiz/${enrollmentId}/${moduleId}`,
+                method: "POST",
+                data: { score }
+            }),
+            invalidatesTags: ["COURSE", "ENROLLMENT", "USER"]
+        }),
+        getPendingAssignment: builder.query({
+            query: ({ courseId }) => ({
+                url: `/enrollment/admin/pending-assignment?courseId=${courseId || ""}`,
+                method: "GET",
+            }),
+            providesTags:["PENDING_ASSIGNMENTS"]
+        }),
+        reviewAssignment: builder.mutation({
+            query: ({ enrollmentId, moduleId, mark }) => ({
+                url: `/enrollment/review/assignment/${enrollmentId}/${moduleId}`,
+                method: "PATCH",
+                data: { mark }
+            }),
+            invalidatesTags: ["ENROLLMENT", "USER", "PENDING_ASSIGNMENTS"]
+        }),
     })
 })
 
-export const { useMakeEnrollmentMutation, useEnrollmentUserQuery, useEnrollmentProgressQuery, useMarkAsCompleteMutation, useGetEnrollmentsQuery } = enrollmentApi
+export const { useMakeEnrollmentMutation, useEnrollmentUserQuery, useEnrollmentProgressQuery, useMarkAsCompleteMutation, useGetEnrollmentsQuery, useSubmitAssignmentMutation, useSubmitQuizMutation, useGetPendingAssignmentQuery, useReviewAssignmentMutation } = enrollmentApi

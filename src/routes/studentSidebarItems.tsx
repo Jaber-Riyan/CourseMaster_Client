@@ -28,18 +28,18 @@ export const studentSidebarItems: ISidebarItem = {
       href: "/student/courses",
       component: Courses,
     },
-    {
-      label: "Assignments",
-      icon: FileText,
-      href: "/student/assignments",
-      component: Assignments,
-    },
-    {
-      label: "Quizzes",
-      icon: ClipboardList,
-      href: "/student/quizzes",
-      component: Quizzes,
-    },
+    // {
+    //   label: "Assignments",
+    //   icon: FileText,
+    //   href: "/student/assignments",
+    //   component: Assignments,
+    // },
+    // {
+    //   label: "Quizzes",
+    //   icon: ClipboardList,
+    //   href: "/student/quizzes",
+    //   component: Quizzes,
+    // },
     {
       label: "Profile",
       icon: User,
